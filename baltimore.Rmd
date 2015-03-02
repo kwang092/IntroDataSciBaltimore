@@ -472,3 +472,35 @@ kpai()
 
 What did you observe? I was surprised to find that most of the arrests made some distance away from the cluster of police stations were for white people. It would be interesting to investigate what kinds of crimes might have been committed so far away from the stations, and why white people stand out as being arrested at that distance, especially in the east.
 
+#### Ryan Wolniak, Brian Lindsey, and Kevin Wang
+
+What question are you asking?: We are attempting to discern which season of the year has the highest number of prostitution offenses
+
+What is the code you use to answer it?:
+
+```{r}
+
+
+
+
+arrest_tab=read.csv("BPD_Arrests.csv", stringsAsFactors=FALSE)
+prostitution_arrests <- arrest_tab[which(arrest_tab$incidentOffense == '55A-Prostitution'),]
+
+range(prostitution_arrests$arrestDate)
+
+dates <- as.Date(prostitution_arrests$arrestDate, "%m/%d/%Y")
+winter_tab <- rbind(table(dates < "2011-03-20"),table(dates > "2011-12-22" & dates < "2012-03-20"), table(dates > "2012-12-22"))
+winter_total <- sum(winter_tab[,"TRUE"])
+spring_tab <- rbind(table(dates > "2011-03-19" & dates < "2011-06-21"),table(dates > "2012-03-19" & dates < "2012-06-20"))
+spring_total <- sum(spring_tab[,"TRUE"])
+summer_tab <- rbind(table(dates > "2011-06-20" & dates < "2011-09-22"),table(dates > "2012-06-19" & dates < "2012-09-22"))
+summer_total <- sum(summer_tab[,"TRUE"])
+fall_tab <- rbind(table(dates > "2011-09-21" & dates < "2011-12-23"),table(dates > "2012-09-21" & dates < "2012-12-22"))
+fall_total <- sum(fall_tab[,"TRUE"])
+
+
+slices <- c(winter_total, spring_total,summer_total,fall_total)
+lbls <- c("Winter", "Spring", "Summer", "Fall")
+pie(slices, labels = lbls, main = "Prostitution by Season")
+```
+What did you observe? We observed that the range function was exhibiting odd output when querying for the range of prostitutions. This led our search towards a new way of classifying the dates in order to clean the data and correct the output. After cleaning the data and running analysis, we found that there was a correlation between the warmer seasons and prostitution rate in Baltimore (where warmer months have a higher rate of prostitution).
